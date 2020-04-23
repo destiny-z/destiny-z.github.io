@@ -83,15 +83,14 @@
 <meta property="og:url" content="http://yoursite.com/2020/01/20/Java%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="destiny_z的博客">
 <meta property="og:description" content="Java并发基础什么是线程和进程?何为进程?进程是程序的一次执行过程，是系统运行程序的基本单位，因此进程是动态的。系统运行一个程序即是一个进程从创建，运行到消亡的过程。 在 Java 中，当我们启动 main 函数时其实就是启动了一个 JVM 的进程，而 main 函数所在的线程就是这个进程中的一个线程，也称主线程。">
-<meta property="og:image" content="d:%5Cgithub%5Csource_posts%5CP%7D$JF5JJ7%60A1">
 <meta property="og:image" content="d:%5Cgithub%5Csource_posts%5CQGB%5D6">
 <meta property="og:image" content="d:%5Cgithub%5Csource_posts%5COS16%5DDR4%7BQ%7DPMZJMAIOLI6X.png">
 <meta property="article:published_time" content="2020-01-20T11:40:10.000Z">
-<meta property="article:modified_time" content="2020-04-23T09:14:22.379Z">
+<meta property="article:modified_time" content="2020-04-23T12:45:45.316Z">
 <meta property="article:author" content="destiny_z">
 <meta property="article:tag" content="Java JUC">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="d:%5Cgithub%5Csource_posts%5CP%7D$JF5JJ7%60A1">
+<meta name="twitter:image" content="d:%5Cgithub%5Csource_posts%5CQGB%5D6">
 
 
 
@@ -391,7 +390,8 @@
         <h2 id="Java并发基础"><a href="#Java并发基础" class="headerlink" title="Java并发基础"></a>Java并发基础</h2><h3 id="什么是线程和进程"><a href="#什么是线程和进程" class="headerlink" title="什么是线程和进程?"></a>什么是线程和进程?</h3><h4 id="何为进程"><a href="#何为进程" class="headerlink" title="何为进程?"></a>何为进程?</h4><p><strong>进程是程序的一次执行过程，是系统运行程序的基本单位，因此进程是动态的</strong>。系统运行一个程序即是一个进程从创建，运行到消亡的过程。</p>
 <p><strong>在 Java 中，当我们启动 main 函数时其实就是启动了一个 JVM 的进程，而 main 函数所在的线程就是这个进程中的一个线程，也称主线程。</strong><a id="more"></a></p>
 <h4 id="何为线程"><a href="#何为线程" class="headerlink" title="何为线程?"></a>何为线程?</h4><p>线程与进程相似，<strong>但线程是一个比进程更小的执行单位</strong>。一个进程在其执行的过程中可以产生多个线程。与进程不同的是同类的多个线程共享进程的<strong>堆</strong>和<strong>方法区</strong>资源，但每个线程有自己的<strong>程序计数器</strong>、<strong>虚拟机栈</strong>和<strong>本地方法栈</strong>，所以系统在产生一个线程，或是在各个线程之间作切换工作时，负担要比进程小得多，也正因为如此，线程也被称为轻量级进程。</p>
-<h4 id="请简要描述线程与进程的关系-区别及优缺点"><a href="#请简要描述线程与进程的关系-区别及优缺点" class="headerlink" title="请简要描述线程与进程的关系,区别及优缺点"></a>请简要描述线程与进程的关系,区别及优缺点</h4><p><img src="D:%5Cgithub%5Csource_posts%5CP%7D$JF5JJ7%60A1" alt="">)]~HZF$PAJ2.png)</p>
+<h4 id="请简要描述线程与进程的关系-区别及优缺点"><a href="#请简要描述线程与进程的关系-区别及优缺点" class="headerlink" title="请简要描述线程与进程的关系,区别及优缺点"></a>请简要描述线程与进程的关系,区别及优缺点</h4><!--![](D:\github\source\_posts\P}$JF5JJ7`A1)]~HZF$PAJ2.png)-->
+
 <p>一个进程中可以有多个线程，多个线程共享进程的<strong>堆</strong>和<strong>方法区</strong> (JDK1.8 之后的<strong>元空间</strong>)资源，但是每个线程有自己的*<em>程序计数器*</em>、<strong>虚拟机栈 和 **本地方法栈</strong>。</p>
 <p><strong>总结：</strong> <strong>线程</strong> 是 <strong>进程</strong> 划分成的更小的运行单位。线程和进程最大的不同在于基本上<strong>各进程是独立的</strong>，而各线程则不一定，因为同一进程中的线程极有可能会相互影响。线程执行开销小，但不利于资源的管理和保护；而进程正相反。</p>
 <h4 id="程序计数器为什么是私有的"><a href="#程序计数器为什么是私有的" class="headerlink" title="程序计数器为什么是私有的?"></a>程序计数器为什么是私有的?</h4><p>程序计数器主要有下面两个作用：</p>
@@ -489,6 +489,10 @@
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/23/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="next" title="二叉树">
+                <i class="fa fa-chevron-left"></i> 二叉树
+              </a>
             
           </div>
 
@@ -589,7 +593,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -600,7 +604,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -611,7 +615,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
