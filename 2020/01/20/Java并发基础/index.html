@@ -83,14 +83,11 @@
 <meta property="og:url" content="http://yoursite.com/2020/01/20/Java%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="destiny_z的博客">
 <meta property="og:description" content="Java并发基础什么是线程和进程?何为进程?进程是程序的一次执行过程，是系统运行程序的基本单位，因此进程是动态的。系统运行一个程序即是一个进程从创建，运行到消亡的过程。 在 Java 中，当我们启动 main 函数时其实就是启动了一个 JVM 的进程，而 main 函数所在的线程就是这个进程中的一个线程，也称主线程。">
-<meta property="og:image" content="d:%5Cgithub%5Csource_posts%5CQGB%5D6">
-<meta property="og:image" content="d:%5Cgithub%5Csource_posts%5COS16%5DDR4%7BQ%7DPMZJMAIOLI6X.png">
 <meta property="article:published_time" content="2020-01-20T11:40:10.000Z">
-<meta property="article:modified_time" content="2020-04-23T16:18:07.127Z">
+<meta property="article:modified_time" content="2020-04-24T07:50:16.954Z">
 <meta property="article:author" content="destiny_z">
 <meta property="article:tag" content="Java JUC">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="d:%5Cgithub%5Csource_posts%5CQGB%5D6">
 
 
 
@@ -427,8 +424,10 @@
 <p>上下文切换对系统来说意味着消耗大量的 CPU 时间，事实上，可能是操作系统中时间消耗最大的操作。</p>
 <p>Linux 相比与其他操作系统（包括其他类 Unix 系统）有很多的优点，其中有一项就是，其上下文切换和模式切换的时间消耗非常少。</p>
 <h4 id="什么是线程死锁-如何避免死锁"><a href="#什么是线程死锁-如何避免死锁" class="headerlink" title="什么是线程死锁?如何避免死锁?"></a>什么是线程死锁?如何避免死锁?</h4><p>多个线程同时被阻塞，它们中的一个或者全部都在等待某个资源被释放。由于线程被无限期地阻塞，因此程序不可能正常终止。</p>
-<p>如下图所示，线程 A 持有资源 2，线程 B 持有资源 1，他们同时都想申请对方的资源，所以这两个线程就会互相等待而进入死锁状态。</p>
-<p><img src="D:%5Cgithub%5Csource_posts%5CQGB%5D6" alt="">)$MU~~0@WM_@(926L3.png)</p>
+<p>当线程 A 持有资源 2，线程 B 持有资源 1，他们同时都想申请对方的资源，此时这两个线程就会互相等待而进入死锁状态。</p>
+<!-- ![](D:\github\source\_posts\QGB]6)$MU~~0@WM_@(926L3.png) -->
+
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public class DeadLockDemo &#123;</span><br><span class="line">    private static Object resource1 &#x3D; new Object();&#x2F;&#x2F;资源 1</span><br><span class="line">    private static Object resource2 &#x3D; new Object();&#x2F;&#x2F;资源 2</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Thread(() -&gt; &#123;</span><br><span class="line">            synchronized (resource1) &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + &quot;get resource1&quot;);</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(1000);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + &quot;waiting get resource2&quot;);</span><br><span class="line">                synchronized (resource2) &#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName() + &quot;get resource2&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, &quot;线程 1&quot;).start();</span><br><span class="line"></span><br><span class="line">        new Thread(() -&gt; &#123;</span><br><span class="line">            synchronized (resource2) &#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + &quot;get resource2&quot;);</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(1000);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + &quot;waiting get resource1&quot;);</span><br><span class="line">                synchronized (resource1) &#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName() + &quot;get resource1&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, &quot;线程 2&quot;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Output</p>
@@ -450,7 +449,9 @@
 
 
 <h3 id="线程的生命周期和状态"><a href="#线程的生命周期和状态" class="headerlink" title="线程的生命周期和状态?"></a>线程的生命周期和状态?</h3><p>Java 线程在运行的生命周期中的指定时刻只可能处于下面 6 种不同状态的其中一个状态</p>
-<p><img src="D:%5Cgithub%5Csource_posts%5COS16%5DDR4%7BQ%7DPMZJMAIOLI6X.png" alt=""></p>
+<!-- ![](D:\github\source\_posts\OS16]DR4{Q}PMZJMAIOLI6X.png) -->
+
+
 <p><strong>新建（New）</strong>：创建后尚未启动的线程处于这种状态；<br><strong>运行（Runnable）</strong>：Runnable 包括了操作系统线程状态中的 Running 和 Ready，也就是处于此状态的线程有可能正在执行，也有可能正在等待着 CPU 为它分配执行时间；<br><strong>无限期等待（Waiting）</strong>：处于这种状态的线程不会被分配 CPU 执行时间，它们要等待被其它线程显式地唤醒；以下三种方法会让线程进入无限期等待状态：<br>没有设置 TimeOut 参数的 Object.wait()；<br>没有设置 TimeOut 参数的 Thread.join()；<br>LockSupport.park()。<br><strong>限期等待（Timed Waiting）</strong>：处于这种状态的线程也不会被分配 CPU 执行时间，不过无需等待被其它线程显式地唤醒，在一定时间之后它们会由系统自动唤醒；以下方法会让线程进入限期等待状态：<br>Thread.sleep()；<br>设置了 TimeOut 参数的 Object.wait()；<br>设置了 TimeOut 参数的 Thread.join()；<br>LockSupport.parkNanos()；<br>LockSupport.parkUntil()。<br><strong>阻塞（Blocked）</strong>：线程被阻塞了，「阻塞状态」和「等待状态」的区别是：「阻塞状态」在等待着获取一个排他锁，这个事件将在另一个线程放弃这个锁的时候发生；而「等待状态」则是在等待一段时间，或者唤醒动作的发送。在程序等待进入同步区域时，线程将进入这种状态；<br><strong>结束（Terminated）</strong>：线程已经结束执行。</p>
 <h4 id="sleep-方法和-wait-方法区别和共同点"><a href="#sleep-方法和-wait-方法区别和共同点" class="headerlink" title="sleep() 方法和 wait() 方法区别和共同点?"></a>sleep() 方法和 wait() 方法区别和共同点?</h4><ul>
 <li>两者最主要的区别在于：<strong>sleep 方法没有释放锁，而 wait 方法释放了锁</strong> 。</li>
@@ -593,7 +594,7 @@
               
                 <a href="/archives/%7C%7Carchive">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -604,7 +605,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -615,7 +616,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
