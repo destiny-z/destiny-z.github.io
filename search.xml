@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>线程池</title>
+    <url>/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h4 id="为什么要用线程池？"><a href="#为什么要用线程池？" class="headerlink" title="为什么要用线程池？"></a>为什么要用线程池？</h4><ul>
+<li><strong>降低资源消耗</strong>。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</li>
+<li><strong>提高响应速度</strong>。当任务到达时，任务可以不需要的等到线程创建就能立即执行。</li>
+<li><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，<br>还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</li>
+</ul>
+<h4 id="实现Runnable接口和Callable接口的区别"><a href="#实现Runnable接口和Callable接口的区别" class="headerlink" title="实现Runnable接口和Callable接口的区别"></a>实现Runnable接口和Callable接口的区别</h4><p><code>Runnable</code>自Java 1.0以来一直存在，但<code>Callable</code>仅在Java 1.5中引入,<br>目的就是为了来处理<code>Runnable</code>不支持的用例。<br><code>Runnable</code> 接口不会返回结果或抛出检查异常，<br>但是<code>Callable</code> 接口可以。所以，如果任务不需要返回结果或抛出异常推荐使用 <code>Runnable</code> 接口，<br>这样代码看起来会更加简洁。</p>
+<p>工具类 <code>Executors</code> 可以实现 <code>Runnable</code> 对象和 <code>Callable</code> 对象之间的相互转换。<br>（<code>Executors.callable（Runnable task）</code>或 <code>Executors.callable（Runnable task，Object resule）</code>）。</p>
+<h4 id="执行execute-方法和submit-方法的区别是什么呢？"><a href="#执行execute-方法和submit-方法的区别是什么呢？" class="headerlink" title="执行execute()方法和submit()方法的区别是什么呢？"></a>执行execute()方法和submit()方法的区别是什么呢？</h4><ul>
+<li><strong><code>execute()</code>方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；</strong></li>
+<li><strong><code>submit()</code>方法用于提交需要返回值的任务。线程池会返回一个 <code>Future</code> 类型的对象，<br>通过这个 <code>Future</code> 对象可以判断任务是否执行成功，</strong><br>并且可以通过 <code>Future</code> 的 <code>get()</code>方法来获取返回值，<code>get()</code>方法会阻塞当前线程直到任务完成，<br>而使用 <code>get（long timeout，TimeUnit unit）</code>方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。</li>
+</ul>
+<h4 id="如何创建线程池"><a href="#如何创建线程池" class="headerlink" title="如何创建线程池"></a>如何创建线程池</h4><p>《阿里巴巴Java开发手册》中强制线程池不允许使用 <code>Executors</code> 去创建，<br>而是通过 <code>ThreadPoolExecutor</code> 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</p>
+<p><code>Executors</code> 返回线程池对象的弊端如下：</p>
+<p><code>FixedThreadPool</code> 和 <code>SingleThreadExecutor</code> ： 允许请求的队列长度为 Integer.MAX_VALUE ，可能堆积大量的请求，从而导致OOM。<br><code>CachedThreadPool</code> 和 <code>ScheduledThreadPool</code> ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致OOM。</p>
+<p><strong>方式一：通过构造方法实现</strong></p>
+<p><strong>方式二：通过Executor 框架的工具类Executors来实现</strong> 我们可以创建三种类型的ThreadPoolExecutor：</p>
+<ul>
+<li>FixedThreadPool ： 该方法返回一个固定线程数量的线程池。该线程池中的线程数量始终不变。当有一个新的任务提交时，线程池中若有空闲线程，则立即执行。若没有，则新的任务会被暂存在一个任务队列中，待有线程空闲时，便处理在任务队列中的任务。</li>
+<li>SingleThreadExecutor： 方法返回一个只有一个线程的线程池。若多余一个任务被提交到该线程池，任务会被保存在一个任务队列中，待线程空闲，按先入先出的顺序执行队列中的任务。</li>
+<li>CachedThreadPool： 该方法返回一个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用。</li>
+</ul>
+<h4 id="ThreadPoolExecutor-类分析"><a href="#ThreadPoolExecutor-类分析" class="headerlink" title="ThreadPoolExecutor 类分析"></a>ThreadPoolExecutor 类分析</h4><p><code>ThreadPoolExecutor</code>类中提供的四个构造方法。我们来看最长的那个，<br>其余三个都是在这个构造方法的基础上产生（其他几个构造方法说白点都是给定某些默认参数的构造方法比如默认制定拒绝策略是什么），这里就不贴代码讲了，比较简单。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 用给定的初始参数创建一个新的ThreadPoolExecutor。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">                          int maximumPoolSize,</span><br><span class="line">                          long keepAliveTime,</span><br><span class="line">                          TimeUnit unit,</span><br><span class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                          ThreadFactory threadFactory,</span><br><span class="line">                          RejectedExecutionHandler handler) &#123;</span><br><span class="line">    if (corePoolSize &lt; 0 ||</span><br><span class="line">        maximumPoolSize &lt;&#x3D; 0 ||</span><br><span class="line">        maximumPoolSize &lt; corePoolSize ||</span><br><span class="line">        keepAliveTime &lt; 0)</span><br><span class="line">        throw new IllegalArgumentException();</span><br><span class="line">    if (workQueue &#x3D;&#x3D; null || threadFactory &#x3D;&#x3D; null || handler &#x3D;&#x3D; null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    this.corePoolSize &#x3D; corePoolSize;</span><br><span class="line">    this.maximumPoolSize &#x3D; maximumPoolSize;</span><br><span class="line">    this.workQueue &#x3D; workQueue;</span><br><span class="line">    this.keepAliveTime &#x3D; unit.toNanos(keepAliveTime);</span><br><span class="line">    this.threadFactory &#x3D; threadFactory;</span><br><span class="line">    this.handler &#x3D; handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>ThreadPoolExecutor</code><strong>构造函数重要参数分析</strong></p>
+<p><code>ThreadPoolExecutor</code><strong>3 个最重要的参数</strong>：</p>
+<ul>
+<li><code>corePoolSize</code> : 核心线程数线程数定义了最小可以同时运行的线程数量。</li>
+<li><code>maximumPoolSize</code> : 当队列中存放的任务达到队列容量的时候，当前可以同时运行的线程数量变为最大线程数。</li>
+<li><code>workQueue</code>: 当新任务来的时候会先判断当前运行的线程数量是否达到核心线程数，如果达到的话，新任务就会被存放在队列中。</li>
+</ul>
+<p><code>ThreadPoolExecutor</code>其他常见参数:</p>
+<ul>
+<li><code>keepAliveTime</code>:当线程池中的线程数量大于 <code>corePoolSize</code> 的时候，如果这时没有新的任务提交，核心线程外的线程不会立即销毁，<br>而是会等待，直到等待的时间超过了 <code>keepAliveTime</code>才会被回收销毁；</li>
+<li><code>unit</code> : <code>keepAliveTime</code> 参数的时间单位。</li>
+<li><code>threadFactory</code> :<code>executor</code> 创建新线程的时候会用到。</li>
+<li><code>handler</code> :饱和策略。关于饱和策略下面单独介绍一下。</li>
+</ul>
+<p><code>ThreadPoolExecutor</code> <strong>饱和策略</strong><br><code>ThreadPoolExecutor</code> <strong>饱和策略定义:</strong></p>
+<p>如果当前同时运行的线程数量达到最大线程数量并且队列也已经被放满了任务时，<code>ThreadPoolTaskExecutor</code> 定义一些策略:</p>
+<ul>
+<li><code>ThreadPoolExecutor.AbortPolicy</code>：抛出 <code>RejectedExecutionException</code>来拒绝新任务的处理。</li>
+<li><code>ThreadPoolExecutor.CallerRunsPolicy</code>：<strong>调用执行自己的线程运行任务</strong>。您不会任务请求。<br>但是这种策略会降低对于新任务提交速度，影响程序的整体性能。另外，这个策略喜欢增加队列容量。<br>如果您的应用程序可以承受此延迟并且你不能任务丢弃任何一个任务请求的话，你可以选择这个策略。</li>
+<li><code>ThreadPoolExecutor.DiscardPolicy</code>： 不处理新任务，直接丢弃掉。</li>
+<li><code>ThreadPoolExecutor.DiscardOldestPolicy</code>： 此策略将丢弃最早的未处理的任务请求。<br>举个例子： Spring 通过 <code>ThreadPoolTaskExecutor</code> 或者我们直接通过 <code>ThreadPoolExecutor</code> 的构造函数创建线程池的时候，<br>当我们不指定 <code>RejectedExecutionHandler</code> 饱和策略的话来配置线程池的时候默认使用的是 <code>ThreadPoolExecutor.AbortPolicy</code>。<br>在默认情况下，<code>ThreadPoolExecutor</code> 将抛出 <code>RejectedExecutionException</code> 来拒绝新来的任务 ，这代表你将丢失对这个任务的处理。<br>对于可伸缩的应用程序，建议使用 <code>ThreadPoolExecutor.CallerRunsPolicy</code>。当最大池被填满时，此策略为我们提供可伸缩队列。<br>（这个直接查看 <code>ThreadPoolExecutor</code> 的构造函数源码就可以看出，比较简单的原因，这里就不贴代码了）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>线程池</category>
+      </categories>
+      <tags>
+        <tag>线程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java并发基础</title>
     <url>/2020/02/23/Java%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h2 id="Java并发基础"><a href="#Java并发基础" class="headerlink" title="Java并发基础"></a>Java并发基础</h2><h3 id="什么是线程和进程"><a href="#什么是线程和进程" class="headerlink" title="什么是线程和进程?"></a>什么是线程和进程?</h3><h4 id="何为进程"><a href="#何为进程" class="headerlink" title="何为进程?"></a>何为进程?</h4><p><strong>进程是程序的一次执行过程，是系统运行程序的基本单位，因此进程是动态的</strong>。系统运行一个程序即是一个进程从创建，运行到消亡的过程。</p>
@@ -86,6 +143,66 @@
       </categories>
       <tags>
         <tag>Java JUC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>链表</title>
+    <url>/2019/10/11/%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="链表之链表中倒数第k个节点"><a href="#链表之链表中倒数第k个节点" class="headerlink" title="链表之链表中倒数第k个节点"></a>链表之链表中倒数第k个节点</h3><h4 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h4><p>输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 k &#x3D; 2.</span><br><span class="line"></span><br><span class="line">返回链表 4-&gt;5.</span><br></pre></td></tr></table></figure>
+<h4 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h4><h5 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h5><ul>
+<li>第一时间想到的解法：<ul>
+<li>先遍历统计链表长度，记为 n ；</li>
+<li>设置一个指针走 (n-k) 步，即可找到链表倒数第 k 个节点。</li>
+</ul>
+</li>
+<li>使用双指针则可以不用统计链表长度。<ul>
+<li>初始化： 快指针 <code>fast</code> 、慢指针 <code>slow</code> ，双指针都指向头节点 <code>head</code>​ 。</li>
+<li>构建双指针距离： 快指针 <code>fast</code> 先向前走 k 步（结束后，双指针 <code>fast</code> 和 <code>slow</code> 间相距 k 步）。</li>
+<li>双指针共同移动： 循环中，双指针 <code>fast</code> 和 <code>slow</code> 每轮都向前走一步，直至 <code>fast</code> 走过链表 尾节点 时跳出（跳出后， <code>slow</code> 与尾节点距离为 k−1，即 <code>slow</code> 指向倒数第 k 个节点）。</li>
+<li>返回值： 返回 <code>slow</code> 即可。</li>
+</ul>
+</li>
+</ul>
+<p><strong>下面采用双指针的方法进行求解</strong></p>
+<p><strong>双指针复杂度分析：</strong></p>
+<ul>
+<li>时间复杂度 O(N) ： N 为链表长度；总体看， <code>fast</code> 走了 N 步， <code>slow</code> 走了 (N-k) 步。</li>
+<li>空间复杂度 O(1) ： 双指针 <code>fast</code> , <code>slow</code> 使用常数大小的额外空间。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123; val &#x3D; x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode getKthFromEnd(ListNode head, int k) &#123;</span><br><span class="line">        ListNode fast &#x3D; head, slow &#x3D; head;</span><br><span class="line">        for(int i &#x3D; 0; i &lt; k; i++) &#123;</span><br><span class="line">            if (fast &#x3D;&#x3D; null) return null;</span><br><span class="line">            fast &#x3D; fast.next;</span><br><span class="line">        &#125;</span><br><span class="line">        while(fast!&#x3D;null)&#123;</span><br><span class="line">            fast &#x3D; fast.next;</span><br><span class="line">            slow &#x3D; slow.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return slow;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="链表之两个链表的第一个公共节点"><a href="#链表之两个链表的第一个公共节点" class="headerlink" title="链表之两个链表的第一个公共节点"></a>链表之两个链表的第一个公共节点</h3><h4 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h4><p>输入两个链表，找出它们的第一个公共节点。</p>
+<h4 id="解题思路-1"><a href="#解题思路-1" class="headerlink" title="解题思路"></a>解题思路</h4><p>我们使用两个指针 <code>ptr1</code>，<code>ptr2</code> 分别指向两个链表 <code>headA</code>，<code>headB</code> 的头结点，<br>然后同时分别逐结点遍历，当 <code>ptr1</code> 到达链表 <code>headA</code> 的末尾时，<br>重新定位到链表 <code>headB</code> 的头结点；当 <code>ptr2</code> 到达链表 <code>headB</code> 的末尾时，重新定位到链表 <code>headA</code> 的头结点。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123;</span><br><span class="line"> *         val &#x3D; x;</span><br><span class="line"> *         next &#x3D; null;</span><br><span class="line"> *     &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Solution &#123;</span><br><span class="line">    public ListNode getIntersectionNode(ListNode headA, ListNode headB) &#123;</span><br><span class="line">        ListNode ptr1 &#x3D; headA, ptr2 &#x3D; headB;</span><br><span class="line">        while(ptr1 !&#x3D; ptr2)&#123;</span><br><span class="line">            ptr1 &#x3D; ptr1 &#x3D;&#x3D; null?headB:ptr1.next;</span><br><span class="line">            ptr2 &#x3D; ptr2 &#x3D;&#x3D; null?headA:ptr2.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return ptr1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="链表之反转链表"><a href="#链表之反转链表" class="headerlink" title="链表之反转链表"></a>链表之反转链表</h3><h4 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h4><p>定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。</p>
+<p>示例:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</span><br><span class="line">输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</span><br></pre></td></tr></table></figure>
+<p><strong>双指针求解</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123; val &#x3D; x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode reverseList(ListNode head) &#123;</span><br><span class="line">        ListNode pre &#x3D; null, preOfPre &#x3D; null, cur &#x3D; head;</span><br><span class="line">        while(cur!&#x3D;null)&#123;</span><br><span class="line">            pre &#x3D; cur;</span><br><span class="line">            cur &#x3D; cur.next;</span><br><span class="line">            pre.next &#x3D; preOfPre;</span><br><span class="line">            preOfPre &#x3D; pre;</span><br><span class="line">        &#125;</span><br><span class="line">        return pre;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="链表之删除链表的节点"><a href="#链表之删除链表的节点" class="headerlink" title="链表之删除链表的节点"></a>链表之删除链表的节点</h3><h4 id="题目描述-3"><a href="#题目描述-3" class="headerlink" title="题目描述"></a>题目描述</h4><p>给定单向链表的头指针和一个要删除的节点的值，定义一个函数删除该节点。</p>
+<p>返回删除后的链表的头节点。</p>
+<p>示例 1:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: head &#x3D; [4,5,1,9], val &#x3D; 5</span><br><span class="line">输出: [4,1,9]</span><br><span class="line">解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 1 -&gt; 9.</span><br></pre></td></tr></table></figure>
+
+<p>示例 2:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: head &#x3D; [4,5,1,9], val &#x3D; 1</span><br><span class="line">输出: [4,5,9]</span><br><span class="line">解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 5 -&gt; 9.</span><br></pre></td></tr></table></figure>
+<p><strong>引入哨兵节点prior，减少情况讨论</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123; val &#x3D; x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode deleteNode(ListNode head, int val) &#123;</span><br><span class="line">        ListNode prior &#x3D; new ListNode(-1);</span><br><span class="line">        prior.next &#x3D; head;</span><br><span class="line">        ListNode ptr &#x3D; prior;</span><br><span class="line">        while(ptr.next!&#x3D;null &amp;&amp; ptr.next.val !&#x3D; val)&#123;</span><br><span class="line">            ptr &#x3D; ptr.next;</span><br><span class="line">        &#125;</span><br><span class="line">        if(ptr.next !&#x3D; null)&#123;</span><br><span class="line">            ptr.next &#x3D; ptr.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return prior.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="链表之复杂链表的复制"><a href="#链表之复杂链表的复制" class="headerlink" title="链表之复杂链表的复制"></a>链表之复杂链表的复制</h3><h4 id="题目描述-4"><a href="#题目描述-4" class="headerlink" title="题目描述"></a>题目描述</h4><p>请实现 <code>copyRandomList</code> 函数，复制一个复杂链表。在复杂链表中，<br>每个节点除了有一个 <code>next</code> 指针指向下一个节点，<br>还有一个 <code>random</code> 指针指向链表中的任意节点或者 <code>null</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line">&#x2F;&#x2F; Definition for a Node.</span><br><span class="line">class Node &#123;</span><br><span class="line">    int val;</span><br><span class="line">    Node next;</span><br><span class="line">    Node random;</span><br><span class="line"></span><br><span class="line">    public Node(int val) &#123;</span><br><span class="line">        this.val &#x3D; val;</span><br><span class="line">        this.next &#x3D; null;</span><br><span class="line">        this.random &#x3D; null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">*&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public Node copyRandomList(Node head) &#123;</span><br><span class="line">        if(head &#x3D;&#x3D; null) return null;</span><br><span class="line">        Node ptr &#x3D; head;</span><br><span class="line">        while(ptr !&#x3D; null)&#123;</span><br><span class="line">            Node tmp &#x3D; new Node(ptr.val);</span><br><span class="line">            tmp.next &#x3D; ptr.next;</span><br><span class="line">            ptr.next &#x3D; tmp;</span><br><span class="line">            ptr &#x3D; ptr.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        ptr &#x3D; head;</span><br><span class="line">        while(ptr!&#x3D;null)&#123;</span><br><span class="line">            if(ptr.random!&#x3D;null)&#123;</span><br><span class="line">                ptr.next.random &#x3D; ptr.random.next;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            ptr &#x3D; ptr.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        ptr &#x3D; head;</span><br><span class="line">        Node res &#x3D; ptr.next;</span><br><span class="line">        while(ptr!&#x3D;null)&#123;</span><br><span class="line">            Node tmp &#x3D; ptr.next;</span><br><span class="line">            ptr.next &#x3D; ptr.next.next;</span><br><span class="line">            if(tmp.next!&#x3D;null)&#123;</span><br><span class="line">                tmp.next &#x3D; tmp.next.next;</span><br><span class="line">            &#125;</span><br><span class="line">            ptr &#x3D; ptr.next;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>链表</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
       </tags>
   </entry>
   <entry>
@@ -241,123 +358,6 @@
       </categories>
       <tags>
         <tag>二叉树</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>线程池</title>
-    <url>/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h4 id="为什么要用线程池？"><a href="#为什么要用线程池？" class="headerlink" title="为什么要用线程池？"></a>为什么要用线程池？</h4><ul>
-<li><strong>降低资源消耗</strong>。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</li>
-<li><strong>提高响应速度</strong>。当任务到达时，任务可以不需要的等到线程创建就能立即执行。</li>
-<li><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，<br>还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</li>
-</ul>
-<h4 id="实现Runnable接口和Callable接口的区别"><a href="#实现Runnable接口和Callable接口的区别" class="headerlink" title="实现Runnable接口和Callable接口的区别"></a>实现Runnable接口和Callable接口的区别</h4><p><code>Runnable</code>自Java 1.0以来一直存在，但<code>Callable</code>仅在Java 1.5中引入,<br>目的就是为了来处理<code>Runnable</code>不支持的用例。<br><code>Runnable</code> 接口不会返回结果或抛出检查异常，<br>但是<code>Callable</code> 接口可以。所以，如果任务不需要返回结果或抛出异常推荐使用 <code>Runnable</code> 接口，<br>这样代码看起来会更加简洁。</p>
-<p>工具类 <code>Executors</code> 可以实现 <code>Runnable</code> 对象和 <code>Callable</code> 对象之间的相互转换。<br>（<code>Executors.callable（Runnable task）</code>或 <code>Executors.callable（Runnable task，Object resule）</code>）。</p>
-<h4 id="执行execute-方法和submit-方法的区别是什么呢？"><a href="#执行execute-方法和submit-方法的区别是什么呢？" class="headerlink" title="执行execute()方法和submit()方法的区别是什么呢？"></a>执行execute()方法和submit()方法的区别是什么呢？</h4><ul>
-<li><strong><code>execute()</code>方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；</strong></li>
-<li><strong><code>submit()</code>方法用于提交需要返回值的任务。线程池会返回一个 <code>Future</code> 类型的对象，<br>通过这个 <code>Future</code> 对象可以判断任务是否执行成功，</strong><br>并且可以通过 <code>Future</code> 的 <code>get()</code>方法来获取返回值，<code>get()</code>方法会阻塞当前线程直到任务完成，<br>而使用 <code>get（long timeout，TimeUnit unit）</code>方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。</li>
-</ul>
-<h4 id="如何创建线程池"><a href="#如何创建线程池" class="headerlink" title="如何创建线程池"></a>如何创建线程池</h4><p>《阿里巴巴Java开发手册》中强制线程池不允许使用 <code>Executors</code> 去创建，<br>而是通过 <code>ThreadPoolExecutor</code> 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</p>
-<p><code>Executors</code> 返回线程池对象的弊端如下：</p>
-<p><code>FixedThreadPool</code> 和 <code>SingleThreadExecutor</code> ： 允许请求的队列长度为 Integer.MAX_VALUE ，可能堆积大量的请求，从而导致OOM。<br><code>CachedThreadPool</code> 和 <code>ScheduledThreadPool</code> ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致OOM。</p>
-<p><strong>方式一：通过构造方法实现</strong></p>
-<p><strong>方式二：通过Executor 框架的工具类Executors来实现</strong> 我们可以创建三种类型的ThreadPoolExecutor：</p>
-<ul>
-<li>FixedThreadPool ： 该方法返回一个固定线程数量的线程池。该线程池中的线程数量始终不变。当有一个新的任务提交时，线程池中若有空闲线程，则立即执行。若没有，则新的任务会被暂存在一个任务队列中，待有线程空闲时，便处理在任务队列中的任务。</li>
-<li>SingleThreadExecutor： 方法返回一个只有一个线程的线程池。若多余一个任务被提交到该线程池，任务会被保存在一个任务队列中，待线程空闲，按先入先出的顺序执行队列中的任务。</li>
-<li>CachedThreadPool： 该方法返回一个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用。</li>
-</ul>
-<h4 id="ThreadPoolExecutor-类分析"><a href="#ThreadPoolExecutor-类分析" class="headerlink" title="ThreadPoolExecutor 类分析"></a>ThreadPoolExecutor 类分析</h4><p><code>ThreadPoolExecutor</code>类中提供的四个构造方法。我们来看最长的那个，<br>其余三个都是在这个构造方法的基础上产生（其他几个构造方法说白点都是给定某些默认参数的构造方法比如默认制定拒绝策略是什么），这里就不贴代码讲了，比较简单。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 用给定的初始参数创建一个新的ThreadPoolExecutor。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">                          int maximumPoolSize,</span><br><span class="line">                          long keepAliveTime,</span><br><span class="line">                          TimeUnit unit,</span><br><span class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                          ThreadFactory threadFactory,</span><br><span class="line">                          RejectedExecutionHandler handler) &#123;</span><br><span class="line">    if (corePoolSize &lt; 0 ||</span><br><span class="line">        maximumPoolSize &lt;&#x3D; 0 ||</span><br><span class="line">        maximumPoolSize &lt; corePoolSize ||</span><br><span class="line">        keepAliveTime &lt; 0)</span><br><span class="line">        throw new IllegalArgumentException();</span><br><span class="line">    if (workQueue &#x3D;&#x3D; null || threadFactory &#x3D;&#x3D; null || handler &#x3D;&#x3D; null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    this.corePoolSize &#x3D; corePoolSize;</span><br><span class="line">    this.maximumPoolSize &#x3D; maximumPoolSize;</span><br><span class="line">    this.workQueue &#x3D; workQueue;</span><br><span class="line">    this.keepAliveTime &#x3D; unit.toNanos(keepAliveTime);</span><br><span class="line">    this.threadFactory &#x3D; threadFactory;</span><br><span class="line">    this.handler &#x3D; handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>ThreadPoolExecutor</code><strong>构造函数重要参数分析</strong></p>
-<p><code>ThreadPoolExecutor</code><strong>3 个最重要的参数</strong>：</p>
-<ul>
-<li><code>corePoolSize</code> : 核心线程数线程数定义了最小可以同时运行的线程数量。</li>
-<li><code>maximumPoolSize</code> : 当队列中存放的任务达到队列容量的时候，当前可以同时运行的线程数量变为最大线程数。</li>
-<li><code>workQueue</code>: 当新任务来的时候会先判断当前运行的线程数量是否达到核心线程数，如果达到的话，新任务就会被存放在队列中。</li>
-</ul>
-<p><code>ThreadPoolExecutor</code>其他常见参数:</p>
-<ul>
-<li><code>keepAliveTime</code>:当线程池中的线程数量大于 <code>corePoolSize</code> 的时候，如果这时没有新的任务提交，核心线程外的线程不会立即销毁，<br>而是会等待，直到等待的时间超过了 <code>keepAliveTime</code>才会被回收销毁；</li>
-<li><code>unit</code> : <code>keepAliveTime</code> 参数的时间单位。</li>
-<li><code>threadFactory</code> :<code>executor</code> 创建新线程的时候会用到。</li>
-<li><code>handler</code> :饱和策略。关于饱和策略下面单独介绍一下。</li>
-</ul>
-<p><code>ThreadPoolExecutor</code> <strong>饱和策略</strong><br><code>ThreadPoolExecutor</code> <strong>饱和策略定义:</strong></p>
-<p>如果当前同时运行的线程数量达到最大线程数量并且队列也已经被放满了任务时，<code>ThreadPoolTaskExecutor</code> 定义一些策略:</p>
-<ul>
-<li><code>ThreadPoolExecutor.AbortPolicy</code>：抛出 <code>RejectedExecutionException</code>来拒绝新任务的处理。</li>
-<li><code>ThreadPoolExecutor.CallerRunsPolicy</code>：<strong>调用执行自己的线程运行任务</strong>。您不会任务请求。<br>但是这种策略会降低对于新任务提交速度，影响程序的整体性能。另外，这个策略喜欢增加队列容量。<br>如果您的应用程序可以承受此延迟并且你不能任务丢弃任何一个任务请求的话，你可以选择这个策略。</li>
-<li><code>ThreadPoolExecutor.DiscardPolicy</code>： 不处理新任务，直接丢弃掉。</li>
-<li><code>ThreadPoolExecutor.DiscardOldestPolicy</code>： 此策略将丢弃最早的未处理的任务请求。<br>举个例子： Spring 通过 <code>ThreadPoolTaskExecutor</code> 或者我们直接通过 <code>ThreadPoolExecutor</code> 的构造函数创建线程池的时候，<br>当我们不指定 <code>RejectedExecutionHandler</code> 饱和策略的话来配置线程池的时候默认使用的是 <code>ThreadPoolExecutor.AbortPolicy</code>。<br>在默认情况下，<code>ThreadPoolExecutor</code> 将抛出 <code>RejectedExecutionException</code> 来拒绝新来的任务 ，这代表你将丢失对这个任务的处理。<br>对于可伸缩的应用程序，建议使用 <code>ThreadPoolExecutor.CallerRunsPolicy</code>。当最大池被填满时，此策略为我们提供可伸缩队列。<br>（这个直接查看 <code>ThreadPoolExecutor</code> 的构造函数源码就可以看出，比较简单的原因，这里就不贴代码了）</li>
-</ul>
-]]></content>
-      <categories>
-        <category>线程池</category>
-      </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>链表</title>
-    <url>/2019/10/11/%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="链表之链表中倒数第k个节点"><a href="#链表之链表中倒数第k个节点" class="headerlink" title="链表之链表中倒数第k个节点"></a>链表之链表中倒数第k个节点</h3><h4 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h4><p>输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 k &#x3D; 2.</span><br><span class="line"></span><br><span class="line">返回链表 4-&gt;5.</span><br></pre></td></tr></table></figure>
-<h4 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h4><h5 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h5><ul>
-<li>第一时间想到的解法：<ul>
-<li>先遍历统计链表长度，记为 n ；</li>
-<li>设置一个指针走 (n-k) 步，即可找到链表倒数第 k 个节点。</li>
-</ul>
-</li>
-<li>使用双指针则可以不用统计链表长度。<ul>
-<li>初始化： 快指针 <code>fast</code> 、慢指针 <code>slow</code> ，双指针都指向头节点 <code>head</code>​ 。</li>
-<li>构建双指针距离： 快指针 <code>fast</code> 先向前走 k 步（结束后，双指针 <code>fast</code> 和 <code>slow</code> 间相距 k 步）。</li>
-<li>双指针共同移动： 循环中，双指针 <code>fast</code> 和 <code>slow</code> 每轮都向前走一步，直至 <code>fast</code> 走过链表 尾节点 时跳出（跳出后， <code>slow</code> 与尾节点距离为 k−1，即 <code>slow</code> 指向倒数第 k 个节点）。</li>
-<li>返回值： 返回 <code>slow</code> 即可。</li>
-</ul>
-</li>
-</ul>
-<p><strong>下面采用双指针的方法进行求解</strong></p>
-<p><strong>双指针复杂度分析：</strong></p>
-<ul>
-<li>时间复杂度 O(N) ： N 为链表长度；总体看， <code>fast</code> 走了 N 步， <code>slow</code> 走了 (N-k) 步。</li>
-<li>空间复杂度 O(1) ： 双指针 <code>fast</code> , <code>slow</code> 使用常数大小的额外空间。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123; val &#x3D; x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode getKthFromEnd(ListNode head, int k) &#123;</span><br><span class="line">        ListNode fast &#x3D; head, slow &#x3D; head;</span><br><span class="line">        for(int i &#x3D; 0; i &lt; k; i++) &#123;</span><br><span class="line">            if (fast &#x3D;&#x3D; null) return null;</span><br><span class="line">            fast &#x3D; fast.next;</span><br><span class="line">        &#125;</span><br><span class="line">        while(fast!&#x3D;null)&#123;</span><br><span class="line">            fast &#x3D; fast.next;</span><br><span class="line">            slow &#x3D; slow.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return slow;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="链表之两个链表的第一个公共节点"><a href="#链表之两个链表的第一个公共节点" class="headerlink" title="链表之两个链表的第一个公共节点"></a>链表之两个链表的第一个公共节点</h3><h4 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h4><p>输入两个链表，找出它们的第一个公共节点。</p>
-<h4 id="解题思路-1"><a href="#解题思路-1" class="headerlink" title="解题思路"></a>解题思路</h4><p>我们使用两个指针 <code>ptr1</code>，<code>ptr2</code> 分别指向两个链表 <code>headA</code>，<code>headB</code> 的头结点，<br>然后同时分别逐结点遍历，当 <code>ptr1</code> 到达链表 <code>headA</code> 的末尾时，<br>重新定位到链表 <code>headB</code> 的头结点；当 <code>ptr2</code> 到达链表 <code>headB</code> 的末尾时，重新定位到链表 <code>headA</code> 的头结点。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123;</span><br><span class="line"> *         val &#x3D; x;</span><br><span class="line"> *         next &#x3D; null;</span><br><span class="line"> *     &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Solution &#123;</span><br><span class="line">    public ListNode getIntersectionNode(ListNode headA, ListNode headB) &#123;</span><br><span class="line">        ListNode ptr1 &#x3D; headA, ptr2 &#x3D; headB;</span><br><span class="line">        while(ptr1 !&#x3D; ptr2)&#123;</span><br><span class="line">            ptr1 &#x3D; ptr1 &#x3D;&#x3D; null?headB:ptr1.next;</span><br><span class="line">            ptr2 &#x3D; ptr2 &#x3D;&#x3D; null?headA:ptr2.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return ptr1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="链表之反转链表"><a href="#链表之反转链表" class="headerlink" title="链表之反转链表"></a>链表之反转链表</h3><h4 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h4><p>定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。</p>
-<p>示例:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</span><br><span class="line">输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</span><br></pre></td></tr></table></figure>
-<p><strong>双指针求解</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123; val &#x3D; x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode reverseList(ListNode head) &#123;</span><br><span class="line">        ListNode pre &#x3D; null, preOfPre &#x3D; null, cur &#x3D; head;</span><br><span class="line">        while(cur!&#x3D;null)&#123;</span><br><span class="line">            pre &#x3D; cur;</span><br><span class="line">            cur &#x3D; cur.next;</span><br><span class="line">            pre.next &#x3D; preOfPre;</span><br><span class="line">            preOfPre &#x3D; pre;</span><br><span class="line">        &#125;</span><br><span class="line">        return pre;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="链表之删除链表的节点"><a href="#链表之删除链表的节点" class="headerlink" title="链表之删除链表的节点"></a>链表之删除链表的节点</h3><h4 id="题目描述-3"><a href="#题目描述-3" class="headerlink" title="题目描述"></a>题目描述</h4><p>给定单向链表的头指针和一个要删除的节点的值，定义一个函数删除该节点。</p>
-<p>返回删除后的链表的头节点。</p>
-<p>示例 1:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: head &#x3D; [4,5,1,9], val &#x3D; 5</span><br><span class="line">输出: [4,1,9]</span><br><span class="line">解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 1 -&gt; 9.</span><br></pre></td></tr></table></figure>
-
-<p>示例 2:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: head &#x3D; [4,5,1,9], val &#x3D; 1</span><br><span class="line">输出: [4,5,9]</span><br><span class="line">解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 5 -&gt; 9.</span><br></pre></td></tr></table></figure>
-<p><strong>引入哨兵节点prior，减少情况讨论</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Definition for singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode next;</span><br><span class="line"> *     ListNode(int x) &#123; val &#x3D; x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode deleteNode(ListNode head, int val) &#123;</span><br><span class="line">        ListNode prior &#x3D; new ListNode(-1);</span><br><span class="line">        prior.next &#x3D; head;</span><br><span class="line">        ListNode ptr &#x3D; prior;</span><br><span class="line">        while(ptr.next!&#x3D;null &amp;&amp; ptr.next.val !&#x3D; val)&#123;</span><br><span class="line">            ptr &#x3D; ptr.next;</span><br><span class="line">        &#125;</span><br><span class="line">        if(ptr.next !&#x3D; null)&#123;</span><br><span class="line">            ptr.next &#x3D; ptr.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return prior.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="链表之复杂链表的复制"><a href="#链表之复杂链表的复制" class="headerlink" title="链表之复杂链表的复制"></a>链表之复杂链表的复制</h3><h4 id="题目描述-4"><a href="#题目描述-4" class="headerlink" title="题目描述"></a>题目描述</h4><p>请实现 <code>copyRandomList</code> 函数，复制一个复杂链表。在复杂链表中，<br>每个节点除了有一个 <code>next</code> 指针指向下一个节点，<br>还有一个 <code>random</code> 指针指向链表中的任意节点或者 <code>null</code>。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line">&#x2F;&#x2F; Definition for a Node.</span><br><span class="line">class Node &#123;</span><br><span class="line">    int val;</span><br><span class="line">    Node next;</span><br><span class="line">    Node random;</span><br><span class="line"></span><br><span class="line">    public Node(int val) &#123;</span><br><span class="line">        this.val &#x3D; val;</span><br><span class="line">        this.next &#x3D; null;</span><br><span class="line">        this.random &#x3D; null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">*&#x2F;</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public Node copyRandomList(Node head) &#123;</span><br><span class="line">        if(head &#x3D;&#x3D; null) return null;</span><br><span class="line">        Node ptr &#x3D; head;</span><br><span class="line">        while(ptr !&#x3D; null)&#123;</span><br><span class="line">            Node tmp &#x3D; new Node(ptr.val);</span><br><span class="line">            tmp.next &#x3D; ptr.next;</span><br><span class="line">            ptr.next &#x3D; tmp;</span><br><span class="line">            ptr &#x3D; ptr.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        ptr &#x3D; head;</span><br><span class="line">        while(ptr!&#x3D;null)&#123;</span><br><span class="line">            if(ptr.random!&#x3D;null)&#123;</span><br><span class="line">                ptr.next.random &#x3D; ptr.random.next;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            ptr &#x3D; ptr.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        ptr &#x3D; head;</span><br><span class="line">        Node res &#x3D; ptr.next;</span><br><span class="line">        while(ptr!&#x3D;null)&#123;</span><br><span class="line">            Node tmp &#x3D; ptr.next;</span><br><span class="line">            ptr.next &#x3D; ptr.next.next;</span><br><span class="line">            if(tmp.next!&#x3D;null)&#123;</span><br><span class="line">                tmp.next &#x3D; tmp.next.next;</span><br><span class="line">            &#125;</span><br><span class="line">            ptr &#x3D; ptr.next;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>链表</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
       </tags>
   </entry>
 </search>
