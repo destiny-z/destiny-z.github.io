@@ -360,4 +360,16 @@
         <tag>二叉树</tag>
       </tags>
   </entry>
+  <entry>
+    <title>JavaGC</title>
+    <url>/2020/06/23/gc/</url>
+    <content><![CDATA[<h2 id="垃圾收集器组合"><a href="#垃圾收集器组合" class="headerlink" title="垃圾收集器组合"></a>垃圾收集器组合</h2><p><img src="../../public/images/gc/image-20200721001441463.png" alt="image-20200721001441463"></p>
+]]></content>
+      <categories>
+        <category>Java GC</category>
+      </categories>
+      <tags>
+        <tag>GC</tag>
+      </tags>
+  </entry>
 </search>
