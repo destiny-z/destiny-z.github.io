@@ -374,7 +374,7 @@
   </entry>
   <entry>
     <title>集合</title>
-    <url>/2020/06/23/ArrayList%E5%92%8CLinkedList/</url>
+    <url>/2020/04/16/ArrayList%E5%92%8CLinkedList/</url>
     <content><![CDATA[<p>最近看了ArrayList和LinkedList的源码，在此记录一下他们之间的区别。</p>
 <h2 id="ArrayList和LinkedList的区别"><a href="#ArrayList和LinkedList的区别" class="headerlink" title="ArrayList和LinkedList的区别"></a>ArrayList和LinkedList的区别</h2><ul>
 <li>ArrayList底层基于动态数组实现，LinkedList底层基于链表实现</li>
