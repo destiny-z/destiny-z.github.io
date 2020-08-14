@@ -373,7 +373,7 @@
       </tags>
   </entry>
   <entry>
-    <title>集合</title>
+    <title>ArrayList和LinkedList</title>
     <url>/2020/04/16/ArrayList%E5%92%8CLinkedList/</url>
     <content><![CDATA[<p>最近看了ArrayList和LinkedList的源码，在此记录一下他们之间的区别。</p>
 <h2 id="ArrayList和LinkedList的区别"><a href="#ArrayList和LinkedList的区别" class="headerlink" title="ArrayList和LinkedList的区别"></a>ArrayList和LinkedList的区别</h2><ul>
@@ -385,14 +385,14 @@
 </ul>
 ]]></content>
       <categories>
-        <category>Java GC</category>
+        <category>集合</category>
       </categories>
       <tags>
-        <tag>GC</tag>
+        <tag>集合</tag>
       </tags>
   </entry>
   <entry>
-    <title>秒杀</title>
+    <title>秒杀项目云端部署</title>
     <url>/2019/12/11/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE%E4%BA%91%E7%AB%AF%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<h1 id="Java环境安装"><a href="#Java环境安装" class="headerlink" title="Java环境安装"></a>Java环境安装</h1><h2 id="下载jdk并复制到云端"><a href="#下载jdk并复制到云端" class="headerlink" title="下载jdk并复制到云端"></a>下载jdk并复制到云端</h2><p>下载地址：<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></p>
 <h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p><code>tar -zxvf jdk-8u212-linux-x64.tar.gz</code></p>
@@ -409,24 +409,24 @@
 <h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><ul>
 <li><p>首先点击进入<a href="https://dev.mysql.com/downloads/repo/apt/" target="_blank" rel="noopener">官网</a>，划到底部，下载个deb格式文件</p>
 <blockquote>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200813143551.png" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814154034.png" alt="img"></p>
 </blockquote>
 </li>
 <li><p>将下载的文件通过scp复制到tmp目录，cd进入并执行如下命令：<code>dpkg -i mysql-apt-config_0.8.10-1_all.deb</code></p>
 </li>
 <li><p>方向键选mysql-8.0 并按enter键</p>
 <blockquote>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200813143602.png" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814154057.png" alt="img"></p>
 </blockquote>
 </li>
 <li><p>再次方向键选择mysql-8.0 并按enter键</p>
 <blockquote>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200813143611.png" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814154117.png" alt="img"></p>
 </blockquote>
 </li>
 <li><p>方向键选择ok 并按enter键</p>
 <blockquote>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200813145324.png" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814154129.png" alt="img"></p>
 </blockquote>
 </li>
 <li><p>更新apt: <code>apt update</code></p>
@@ -437,14 +437,14 @@
 </li>
 <li><p>上边安装完后，会让你设置root密码，输入后按enter键，并再次确认</p>
 <blockquote>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200813144841.png" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814154140.png" alt="img"></p>
 </blockquote>
 </li>
 </ul>
 <ul>
 <li><p>MySQL8.0采用了新的加密方式，与Ubuntu18.04有兼容问题；<br>故选择下面的旧版本5.x的加密方式</p>
 <blockquote>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200813145156.png" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814154151.png" alt="img"></p>
 </blockquote>
 </li>
 <li><p>登录输入用户名与密码，看是否安装成功<code>mysql -uroot -p</code></p>
@@ -483,7 +483,7 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot</title>
+    <title>定制化内嵌Tomcat开发</title>
     <url>/2019/11/10/%E5%AE%9A%E5%88%B6%E5%8C%96%E5%86%85%E5%B5%8CTomcat%E5%BC%80%E5%8F%91/</url>
     <content><![CDATA[<p>SpringBoot内嵌Tomcat无KeepAlive参数，需在服务端自己配置。</p>
 <p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814151400.png" alt="image-20200814151400454"></p>
