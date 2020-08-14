@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="线程," />
+  <meta name="keywords" content="ssh," />
 
 
 
@@ -77,17 +77,24 @@
 
 
 
-<meta name="description" content="线程池为什么要用线程池？ 降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。 提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。 提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。  实现Runnable接口和Callable接口的区别Runnable自Java 1.0以来">
+<meta name="description" content="ssh做反向代理，可以实现无论在什么位置都能访问到学校内网服务器 适用场景： 主机B不能直接访问主机A 主机A能直接访问主机B  ip是我瞎编的，以防攻击 SSH参数介绍（区分大小写）   -f：后台执行ssh指令   -C：允许压缩数据   -N：不执行远程指令   -R：将远程主机(服务器)的某个端口转发到本地端指定机器的指定端口   -L：将本地机(客户机)的某个端口转发到远端指定机器的指定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="线程池">
-<meta property="og:url" content="http://yoursite.com/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/index.html">
+<meta property="og:title" content="ssh反向代理-连接学校内网服务器">
+<meta property="og:url" content="http://yoursite.com/2020/01/18/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86-%E8%BF%9E%E6%8E%A5%E5%AD%A6%E6%A0%A1%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="destiny_z的博客">
-<meta property="og:description" content="线程池为什么要用线程池？ 降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。 提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。 提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。  实现Runnable接口和Callable接口的区别Runnable自Java 1.0以来">
-<meta property="article:published_time" content="2020-01-20T11:40:10.000Z">
-<meta property="article:modified_time" content="2020-04-24T11:22:25.696Z">
+<meta property="og:description" content="ssh做反向代理，可以实现无论在什么位置都能访问到学校内网服务器 适用场景： 主机B不能直接访问主机A 主机A能直接访问主机B  ip是我瞎编的，以防攻击 SSH参数介绍（区分大小写）   -f：后台执行ssh指令   -C：允许压缩数据   -N：不执行远程指令   -R：将远程主机(服务器)的某个端口转发到本地端指定机器的指定端口   -L：将本地机(客户机)的某个端口转发到远端指定机器的指定">
+<meta property="og:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205752">
+<meta property="og:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205845">
+<meta property="og:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205902">
+<meta property="og:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205913">
+<meta property="og:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205924">
+<meta property="og:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205933">
+<meta property="article:published_time" content="2020-01-17T23:32:26.000Z">
+<meta property="article:modified_time" content="2020-08-14T13:01:02.883Z">
 <meta property="article:author" content="destiny_z">
-<meta property="article:tag" content="线程">
+<meta property="article:tag" content="ssh">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205752">
 
 
 
@@ -117,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/01/20/线程池/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/01/18/ssh反向代理-连接学校内网服务器/"/>
 
 
 
 
 
-  <title>线程池 | destiny_z的博客</title>
+  <title>ssh反向代理-连接学校内网服务器 | destiny_z的博客</title>
   
 
 
@@ -284,7 +291,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/18/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86-%E8%BF%9E%E6%8E%A5%E5%AD%A6%E6%A0%A1%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="destiny_z">
@@ -301,7 +308,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">线程池</h1>
+          <h1 class="post-title" itemprop="name headline">ssh反向代理-连接学校内网服务器</h1>
         
 
         <div class="post-meta">
@@ -313,8 +320,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-20T19:40:10+08:00">
-                2020-01-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-18T07:32:26+08:00">
+                2020-01-18
               </time>
             
 
@@ -336,8 +343,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="index">
-                    <span itemprop="name">线程池</span>
+                  <a href="/categories/ssh/" itemprop="url" rel="index">
+                    <span itemprop="name">ssh</span>
                   </a>
                 </span>
 
@@ -354,9 +361,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/#comments" itemprop="discussionUrl">
+                <a href="/2020/01/18/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86-%E8%BF%9E%E6%8E%A5%E5%AD%A6%E6%A0%A1%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2020/01/20/线程池/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2020/01/18/ssh反向代理-连接学校内网服务器/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -384,52 +391,42 @@
       
 
       
-        <h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h4 id="为什么要用线程池？"><a href="#为什么要用线程池？" class="headerlink" title="为什么要用线程池？"></a>为什么要用线程池？</h4><ul>
-<li><strong>降低资源消耗</strong>。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</li>
-<li><strong>提高响应速度</strong>。当任务到达时，任务可以不需要的等到线程创建就能立即执行。</li>
-<li><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，<br>还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</li>
-</ul>
-<h4 id="实现Runnable接口和Callable接口的区别"><a href="#实现Runnable接口和Callable接口的区别" class="headerlink" title="实现Runnable接口和Callable接口的区别"></a>实现Runnable接口和Callable接口的区别</h4><p><code>Runnable</code>自Java 1.0以来一直存在，但<code>Callable</code>仅在Java 1.5中引入,<br>目的就是为了来处理<code>Runnable</code>不支持的用例。<br><code>Runnable</code> 接口不会返回结果或抛出检查异常，<br>但是<code>Callable</code> 接口可以。所以，如果任务不需要返回结果或抛出异常推荐使用 <code>Runnable</code> 接口，<br>这样代码看起来会更加简洁。</p>
-<p>工具类 <code>Executors</code> 可以实现 <code>Runnable</code> 对象和 <code>Callable</code> 对象之间的相互转换。<br>（<code>Executors.callable（Runnable task）</code>或 <code>Executors.callable（Runnable task，Object resule）</code>）。</p>
-<h4 id="执行execute-方法和submit-方法的区别是什么呢？"><a href="#执行execute-方法和submit-方法的区别是什么呢？" class="headerlink" title="执行execute()方法和submit()方法的区别是什么呢？"></a>执行execute()方法和submit()方法的区别是什么呢？</h4><ul>
-<li><strong><code>execute()</code>方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；</strong></li>
-<li><strong><code>submit()</code>方法用于提交需要返回值的任务。线程池会返回一个 <code>Future</code> 类型的对象，<br>通过这个 <code>Future</code> 对象可以判断任务是否执行成功，</strong><br>并且可以通过 <code>Future</code> 的 <code>get()</code>方法来获取返回值，<code>get()</code>方法会阻塞当前线程直到任务完成，<br>而使用 <code>get（long timeout，TimeUnit unit）</code>方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。</li>
-</ul>
-<h4 id="如何创建线程池"><a href="#如何创建线程池" class="headerlink" title="如何创建线程池"></a>如何创建线程池</h4><p>《阿里巴巴Java开发手册》中强制线程池不允许使用 <code>Executors</code> 去创建，<br>而是通过 <code>ThreadPoolExecutor</code> 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</p>
-<p><code>Executors</code> 返回线程池对象的弊端如下：</p>
-<p><code>FixedThreadPool</code> 和 <code>SingleThreadExecutor</code> ： 允许请求的队列长度为 Integer.MAX_VALUE ，可能堆积大量的请求，从而导致OOM。<br><code>CachedThreadPool</code> 和 <code>ScheduledThreadPool</code> ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致OOM。</p>
-<p><strong>方式一：通过构造方法实现</strong></p>
-<p><strong>方式二：通过Executor 框架的工具类Executors来实现</strong> 我们可以创建三种类型的ThreadPoolExecutor：</p>
-<ul>
-<li>FixedThreadPool ： 该方法返回一个固定线程数量的线程池。该线程池中的线程数量始终不变。当有一个新的任务提交时，线程池中若有空闲线程，则立即执行。若没有，则新的任务会被暂存在一个任务队列中，待有线程空闲时，便处理在任务队列中的任务。</li>
-<li>SingleThreadExecutor： 方法返回一个只有一个线程的线程池。若多余一个任务被提交到该线程池，任务会被保存在一个任务队列中，待线程空闲，按先入先出的顺序执行队列中的任务。</li>
-<li>CachedThreadPool： 该方法返回一个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用。</li>
-</ul>
-<h4 id="ThreadPoolExecutor-类分析"><a href="#ThreadPoolExecutor-类分析" class="headerlink" title="ThreadPoolExecutor 类分析"></a>ThreadPoolExecutor 类分析</h4><p><code>ThreadPoolExecutor</code>类中提供的四个构造方法。我们来看最长的那个，<br>其余三个都是在这个构造方法的基础上产生（其他几个构造方法说白点都是给定某些默认参数的构造方法比如默认制定拒绝策略是什么），这里就不贴代码讲了，比较简单。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 用给定的初始参数创建一个新的ThreadPoolExecutor。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">                          int maximumPoolSize,</span><br><span class="line">                          long keepAliveTime,</span><br><span class="line">                          TimeUnit unit,</span><br><span class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                          ThreadFactory threadFactory,</span><br><span class="line">                          RejectedExecutionHandler handler) &#123;</span><br><span class="line">    if (corePoolSize &lt; 0 ||</span><br><span class="line">        maximumPoolSize &lt;&#x3D; 0 ||</span><br><span class="line">        maximumPoolSize &lt; corePoolSize ||</span><br><span class="line">        keepAliveTime &lt; 0)</span><br><span class="line">        throw new IllegalArgumentException();</span><br><span class="line">    if (workQueue &#x3D;&#x3D; null || threadFactory &#x3D;&#x3D; null || handler &#x3D;&#x3D; null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    this.corePoolSize &#x3D; corePoolSize;</span><br><span class="line">    this.maximumPoolSize &#x3D; maximumPoolSize;</span><br><span class="line">    this.workQueue &#x3D; workQueue;</span><br><span class="line">    this.keepAliveTime &#x3D; unit.toNanos(keepAliveTime);</span><br><span class="line">    this.threadFactory &#x3D; threadFactory;</span><br><span class="line">    this.handler &#x3D; handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>ThreadPoolExecutor</code><strong>构造函数重要参数分析</strong></p>
-<p><code>ThreadPoolExecutor</code><strong>3 个最重要的参数</strong>：</p>
-<ul>
-<li><code>corePoolSize</code> : 核心线程数线程数定义了最小可以同时运行的线程数量。</li>
-<li><code>maximumPoolSize</code> : 当队列中存放的任务达到队列容量的时候，当前可以同时运行的线程数量变为最大线程数。</li>
-<li><code>workQueue</code>: 当新任务来的时候会先判断当前运行的线程数量是否达到核心线程数，如果达到的话，新任务就会被存放在队列中。</li>
-</ul>
-<p><code>ThreadPoolExecutor</code>其他常见参数:</p>
-<ul>
-<li><code>keepAliveTime</code>:当线程池中的线程数量大于 <code>corePoolSize</code> 的时候，如果这时没有新的任务提交，核心线程外的线程不会立即销毁，<br>而是会等待，直到等待的时间超过了 <code>keepAliveTime</code>才会被回收销毁；</li>
-<li><code>unit</code> : <code>keepAliveTime</code> 参数的时间单位。</li>
-<li><code>threadFactory</code> :<code>executor</code> 创建新线程的时候会用到。</li>
-<li><code>handler</code> :饱和策略。关于饱和策略下面单独介绍一下。</li>
-</ul>
-<p><code>ThreadPoolExecutor</code> <strong>饱和策略</strong><br><code>ThreadPoolExecutor</code> <strong>饱和策略定义:</strong></p>
-<p>如果当前同时运行的线程数量达到最大线程数量并且队列也已经被放满了任务时，<code>ThreadPoolTaskExecutor</code> 定义一些策略:</p>
-<ul>
-<li><code>ThreadPoolExecutor.AbortPolicy</code>：抛出 <code>RejectedExecutionException</code>来拒绝新任务的处理。</li>
-<li><code>ThreadPoolExecutor.CallerRunsPolicy</code>：<strong>调用执行自己的线程运行任务</strong>。您不会任务请求。<br>但是这种策略会降低对于新任务提交速度，影响程序的整体性能。另外，这个策略喜欢增加队列容量。<br>如果您的应用程序可以承受此延迟并且你不能任务丢弃任何一个任务请求的话，你可以选择这个策略。</li>
-<li><code>ThreadPoolExecutor.DiscardPolicy</code>： 不处理新任务，直接丢弃掉。</li>
-<li><code>ThreadPoolExecutor.DiscardOldestPolicy</code>： 此策略将丢弃最早的未处理的任务请求。<br>举个例子： Spring 通过 <code>ThreadPoolTaskExecutor</code> 或者我们直接通过 <code>ThreadPoolExecutor</code> 的构造函数创建线程池的时候，<br>当我们不指定 <code>RejectedExecutionHandler</code> 饱和策略的话来配置线程池的时候默认使用的是 <code>ThreadPoolExecutor.AbortPolicy</code>。<br>在默认情况下，<code>ThreadPoolExecutor</code> 将抛出 <code>RejectedExecutionException</code> 来拒绝新来的任务 ，这代表你将丢失对这个任务的处理。<br>对于可伸缩的应用程序，建议使用 <code>ThreadPoolExecutor.CallerRunsPolicy</code>。当最大池被填满时，此策略为我们提供可伸缩队列。<br>（这个直接查看 <code>ThreadPoolExecutor</code> 的构造函数源码就可以看出，比较简单的原因，这里就不贴代码了）</li>
-</ul>
+        <p>ssh做反向代理，可以实现无论在什么位置都能访问到学校内网服务器</p>
+<p><strong>适用场景：</strong></p>
+<p>主机B不能直接访问主机A</p>
+<p>主机A能直接访问主机B</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205752" alt="img"></p>
+<p>ip是我瞎编的，以防攻击</p>
+<p>SSH参数介绍（区分大小写）</p>
+<p>  -f：后台执行ssh指令</p>
+<p>  -C：允许压缩数据</p>
+<p>  -N：不执行远程指令</p>
+<p>  -R：将远程主机(服务器)的某个端口转发到本地端指定机器的指定端口</p>
+<p>  -L：将本地机(客户机)的某个端口转发到远端指定机器的指定端口</p>
+<p>  -p：指定远程主机的端口</p>
+<h3 id="学校内网服务器操作："><a href="#学校内网服务器操作：" class="headerlink" title="学校内网服务器操作："></a>学校内网服务器操作：</h3><p># ssh -fNR 远程端口:localhost:本地端口 远程用户@远程ip</p>
+<p><code>ssh -NfR 2345:localhost:22 root@12.12.12.12 -p 22</code></p>
+<p>之后会要求你输入公网阿里云服务器的密码，输入正确后，可以通过：ps -ef | grep ssh 来查看进程情况，成功显示说明这一步成功。</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205845" alt="img"></p>
+<p>第一步完成后，就可以在任意位置访问公网阿里云服务器进行一下操作访问学校内网服务器了。</p>
+<h3 id="公网阿里云服务器操作："><a href="#公网阿里云服务器操作：" class="headerlink" title="公网阿里云服务器操作："></a>公网阿里云服务器操作：</h3><p>ssh 内网用户名@localhost -p 本地端口号</p>
+<p><code>ssh manli@localhost -p2345</code></p>
+<p>之后要求输入相应的用户名的密码，正确输入后，便可以访问学校内网服务器了。</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205902" alt="img"></p>
+<p>但是这样很不稳定，非常不稳定，总是会断掉，尽管进程在，但是连接已经断掉，所以这个时候就可以用到autossh来自动重新连接。</p>
+<h3 id="autossh保证连接稳定："><a href="#autossh保证连接稳定：" class="headerlink" title="autossh保证连接稳定："></a>autossh保证连接稳定：</h3><p>autossh与ssh的区别就在于<strong>在学校内网操作的时候</strong>，命令变成：</p>
+<p><code>autossh -M 2346 -NfR 2345:localhost:22 root@12.12.12.12 -p 22</code></p>
+<p>-M参数指定一个端口，这个端口是公网机器用来接收内网机器的信息，如果隧道不正常而返回给内网机器让他实现重新连接。</p>
+<p>（如果没有安装autossh，在ubuntu下，用apy-get install autossh进行安装）</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205913" alt="img"></p>
+<p>这样就能稳定的从任何地方访问学校内网服务器了，开心。</p>
+<h4 id="PS："><a href="#PS：" class="headerlink" title="PS："></a>PS：</h4><p>在学校内网操作的时候，因为我弄了太多，导致端口冲突，出现了下面这个问题：</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205924" alt="img"></p>
+<p>解决方法如下：</p>
+<p>1）首先查看进程：<code>ps -ef | grep ssh</code></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205933" alt="img"></p>
+<p>2）发现有很多2345端口的进程，所以才会出现端口连接错误，所以用命令杀死进程，再做操作：<code>kill -9 进程ID</code></p>
+<p>如果不是超级用户，就用：<code>sudo kill -9 进程ID</code>  来操作</p>
 
       
     </div>
@@ -447,7 +444,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag"># 线程</a>
+            <a href="/tags/ssh/" rel="tag"># ssh</a>
           
         </div>
       
@@ -460,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/18/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86-%E8%BF%9E%E6%8E%A5%E5%AD%A6%E6%A0%A1%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="ssh反向代理-连接学校内网服务器">
-                <i class="fa fa-chevron-left"></i> ssh反向代理-连接学校内网服务器
+              <a href="/2019/12/11/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE%E4%BA%91%E7%AB%AF%E9%83%A8%E7%BD%B2/" rel="next" title="秒杀项目云端部署">
+                <i class="fa fa-chevron-left"></i> 秒杀项目云端部署
               </a>
             
           </div>
@@ -470,8 +467,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/02/23/Java%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80/" rel="prev" title="Java并发基础">
-                Java并发基础 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="prev" title="线程池">
+                线程池 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -618,7 +615,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程池"><span class="nav-number">1.</span> <span class="nav-text">线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要用线程池？"><span class="nav-number">1.0.1.</span> <span class="nav-text">为什么要用线程池？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现Runnable接口和Callable接口的区别"><span class="nav-number">1.0.2.</span> <span class="nav-text">实现Runnable接口和Callable接口的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行execute-方法和submit-方法的区别是什么呢？"><span class="nav-number">1.0.3.</span> <span class="nav-text">执行execute()方法和submit()方法的区别是什么呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何创建线程池"><span class="nav-number">1.0.4.</span> <span class="nav-text">如何创建线程池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ThreadPoolExecutor-类分析"><span class="nav-number">1.0.5.</span> <span class="nav-text">ThreadPoolExecutor 类分析</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#学校内网服务器操作："><span class="nav-number">1.</span> <span class="nav-text">学校内网服务器操作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公网阿里云服务器操作："><span class="nav-number">2.</span> <span class="nav-text">公网阿里云服务器操作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#autossh保证连接稳定："><span class="nav-number">3.</span> <span class="nav-text">autossh保证连接稳定：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PS："><span class="nav-number">3.1.</span> <span class="nav-text">PS：</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -782,9 +779,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2020/01/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/';
-          this.page.identifier = '2020/01/20/线程池/';
-          this.page.title = '线程池';
+          this.page.url = 'http://yoursite.com/2020/01/18/ssh%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86-%E8%BF%9E%E6%8E%A5%E5%AD%A6%E6%A0%A1%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8/';
+          this.page.identifier = '2020/01/18/ssh反向代理-连接学校内网服务器/';
+          this.page.title = 'ssh反向代理-连接学校内网服务器';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://your-disq-shortname.disqus.com/embed.js';
