@@ -522,7 +522,7 @@
 <p><strong>适用场景：</strong></p>
 <p>主机B不能直接访问主机A</p>
 <p>主机A能直接访问主机B</p>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205752" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814211301.png" alt="image-20200814211301392"></p>
 <p>ip是我瞎编的，以防攻击</p>
 <p>SSH参数介绍（区分大小写）</p>
 <p>  -f：后台执行ssh指令</p>
@@ -534,24 +534,24 @@
 <h3 id="学校内网服务器操作："><a href="#学校内网服务器操作：" class="headerlink" title="学校内网服务器操作："></a>学校内网服务器操作：</h3><p># ssh -fNR 远程端口:localhost:本地端口 远程用户@远程ip</p>
 <p><code>ssh -NfR 2345:localhost:22 root@12.12.12.12 -p 22</code></p>
 <p>之后会要求你输入公网阿里云服务器的密码，输入正确后，可以通过：ps -ef | grep ssh 来查看进程情况，成功显示说明这一步成功。</p>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205845" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814211331.png" alt="img"></p>
 <p>第一步完成后，就可以在任意位置访问公网阿里云服务器进行一下操作访问学校内网服务器了。</p>
 <h3 id="公网阿里云服务器操作："><a href="#公网阿里云服务器操作：" class="headerlink" title="公网阿里云服务器操作："></a>公网阿里云服务器操作：</h3><p>ssh 内网用户名@localhost -p 本地端口号</p>
 <p><code>ssh manli@localhost -p2345</code></p>
 <p>之后要求输入相应的用户名的密码，正确输入后，便可以访问学校内网服务器了。</p>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205902" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814211355.png" alt="img"></p>
 <p>但是这样很不稳定，非常不稳定，总是会断掉，尽管进程在，但是连接已经断掉，所以这个时候就可以用到autossh来自动重新连接。</p>
 <h3 id="autossh保证连接稳定："><a href="#autossh保证连接稳定：" class="headerlink" title="autossh保证连接稳定："></a>autossh保证连接稳定：</h3><p>autossh与ssh的区别就在于<strong>在学校内网操作的时候</strong>，命令变成：</p>
 <p><code>autossh -M 2346 -NfR 2345:localhost:22 root@12.12.12.12 -p 22</code></p>
 <p>-M参数指定一个端口，这个端口是公网机器用来接收内网机器的信息，如果隧道不正常而返回给内网机器让他实现重新连接。</p>
 <p>（如果没有安装autossh，在ubuntu下，用apy-get install autossh进行安装）</p>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205913" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814211439.png" alt="img"></p>
 <p>这样就能稳定的从任何地方访问学校内网服务器了，开心。</p>
 <h4 id="PS："><a href="#PS：" class="headerlink" title="PS："></a>PS：</h4><p>在学校内网操作的时候，因为我弄了太多，导致端口冲突，出现了下面这个问题：</p>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205924" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814211455.png" alt="img"></p>
 <p>解决方法如下：</p>
 <p>1）首先查看进程：<code>ps -ef | grep ssh</code></p>
-<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814205933" alt="img"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814211511.png" alt="img"></p>
 <p>2）发现有很多2345端口的进程，所以才会出现端口连接错误，所以用命令杀死进程，再做操作：<code>kill -9 进程ID</code></p>
 <p>如果不是超级用户，就用：<code>sudo kill -9 进程ID</code>  来操作</p>
 <h1 id="方式2：easyconnect"><a href="#方式2：easyconnect" class="headerlink" title="方式2：easyconnect"></a>方式2：easyconnect</h1><p>1.通过easyconnect进入学校内网</p>
