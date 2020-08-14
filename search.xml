@@ -482,4 +482,19 @@
         <tag>秒杀</tag>
       </tags>
   </entry>
+  <entry>
+    <title>SpringBoot</title>
+    <url>/2019/11/10/%E5%AE%9A%E5%88%B6%E5%8C%96%E5%86%85%E5%B5%8CTomcat%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<p>SpringBoot内嵌Tomcat无KeepAlive参数，需在服务端自己配置。</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814151400.png" alt="image-20200814151400454"></p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200814152817.png" alt="image-20200814152817878"></p>
+<p>当我们的SpringBoot启动之后，会将我们的server.Tomcat的参数加载到protocol内。我们只需定义WebServerConfiguration，他会将我们之前组装出来的参数在传到对应的ConfigurableWebServerFactory内，然后我们可以将相应的参数customize出来，最后再有一次机会可以修改对应的参数。</p>
+]]></content>
+      <categories>
+        <category>SpringBoot</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
+      </tags>
+  </entry>
 </search>
