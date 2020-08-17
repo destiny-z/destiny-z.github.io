@@ -604,4 +604,23 @@
         <tag>压测</tag>
       </tags>
   </entry>
+  <entry>
+    <title>linux中终端进入目录太多或文件名太长造成终端路径显示太长的路径影响观看的解决方法</title>
+    <url>/2020/07/09/linux%E7%BB%88%E7%AB%AF%E8%BF%9B%E5%85%A5%E7%9B%AE%E5%BD%95%E5%A4%AA%E5%A4%9A%E9%80%A0%E6%88%90%E8%B7%AF%E5%BE%84%E5%A4%AA%E9%95%BF%E5%BD%B1%E5%93%8D%E8%A7%82%E7%9C%8B/</url>
+    <content><![CDATA[<p>在终端中执行<code>vim ~/.bashrc</code></p>
+<p>第一次打开这个文件其中的蓝色方框中的w是小写的，将这三个w改为大写的，如下图所示：</p>
+<p><img src="https://gitee.com/destiny-z/blogImg/raw/master/img/20200817222628.png" alt="image-20200817222627881"></p>
+<p>改好后，保存退出。</p>
+<p>在终端中执行<code>source ~/.bashrc</code> 使刚刚的修改立即生效。</p>
+<p>在打开一个终端，可发现终端路径变为了未当前目录</p>
+<p><strong>ps：w是当前完整的工作路径</strong></p>
+<p>​      <strong>W是指当前目录。</strong></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
 </search>
