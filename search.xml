@@ -623,4 +623,41 @@
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>throw和throws的区别</title>
+    <url>/2020/07/14/throw%E5%92%8Cthrows%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="throws和throw"><a href="#throws和throw" class="headerlink" title="throws和throw"></a><strong>throws和throw</strong></h1><p><strong>throws：</strong>用来声明一个方法可能产生的所有异常，不做任何处理而是将异常往上传，谁调用我我就抛给谁。</p>
+<ul>
+<li><p>用在方法声明后面，跟的是异常类名</p>
+</li>
+<li><p>可以跟多个异常类名，用逗号隔开</p>
+</li>
+<li><p>表示抛出异常，由该方法的调用者来处理</p>
+</li>
+<li><p>throws表示出现异常的一种可能性，并不一定会发生这些异常</p>
+</li>
+</ul>
+<p><strong>throw：</strong>则是用来抛出一个具体的异常类型。</p>
+<ul>
+<li><p>用在方法体内，跟的是异常对象名</p>
+</li>
+<li><p>只能抛出一个异常对象名</p>
+</li>
+<li><p>表示抛出异常，由方法体内的语句处理</p>
+</li>
+<li><p>throw则是抛出了异常，执行throw则一定抛出了某种异常</p>
+</li>
+</ul>
+<h2 id="分别介绍"><a href="#分别介绍" class="headerlink" title="分别介绍"></a><strong>分别介绍</strong></h2><p><strong>throws</strong>在方法后边声明异常，其实就是自己不想对异常做出任何的处理，告诉别人自己可能出现的异常，交给别人处理，然别人处理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Math</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">div</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    <span class="keyword">int</span> t=i/j;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThrowsDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    Math m=<span class="keyword">new</span> Math();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>throw:</strong>就是自己处理一个异常，有两种方式要么是自己捕获异常try…catch代码块，要么是抛出一个异常（throws 异常）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//调用带throws声明的方法，必须显式捕获该异常</span></span><br><span class="line">            <span class="comment">//否则，必须在main方法中再次声明抛出</span></span><br><span class="line">            throwChecked(-<span class="number">3</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            System.out.println(e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//调用抛出Runtime异常的方法既可以显式捕获该异常，</span></span><br><span class="line">        <span class="comment">//也可不理会该异常</span></span><br><span class="line">        throwRuntime(<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">throwChecked</span><span class="params">(<span class="keyword">int</span> a)</span><span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (a &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//自行抛出Exception异常</span></span><br><span class="line">            <span class="comment">//该代码必须处于try块里，或处于带throws声明的方法中</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"a的值大于0，不符合要求"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">throwRuntime</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (a &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//自行抛出RuntimeException异常，既可以显式捕获该异常</span></span><br><span class="line">            <span class="comment">//也可完全不理会该异常，把该异常交给该方法调用者处理</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"a的值大于0，不符合要求"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+      </tags>
+  </entry>
 </search>
